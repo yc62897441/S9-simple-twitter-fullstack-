@@ -24,7 +24,7 @@ module.exports = (app, passport) => {
   app.get('/tweets', tweetController.getTweets)
   app.post('/tweets', tweetController.postTweet)
   app.get('/tweets/:id/replies', (req, res) => { })
-  app.post('/tweets/:id/replies', (req, res) => { })
+  app.post('/tweets/:id/replies', tweetController.postReply)
   app.post('/tweets/:id/like', (req, res) => { })
   app.post('/tweets/:id/unlike', (req, res) => { })
 
