@@ -21,7 +21,7 @@ module.exports = (app, passport) => {
   app.get('/admin/users', (req, res) => { })
 
   // 一般用戶介面 A3-developer in charge
-  app.get('/tweets', (req, res) => { return res.render('index') })
+  app.get('/tweets', tweetController.getTweets)
   app.post('/tweets', tweetController.postTweet)
   app.get('/tweets/:id/replies', (req, res) => { })
   app.post('/tweets/:id/replies', (req, res) => { })

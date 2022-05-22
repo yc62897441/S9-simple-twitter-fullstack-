@@ -2,6 +2,7 @@
 
 <div class="row">
   <div class="col-3">profile</div>
+
   <div class="col-6">
     <h3>首頁</h3>
     <form action="/tweets" method="post">
@@ -11,6 +12,21 @@
       </div>
       <button class="btn btn-primary" type="submit">推文</button>
     </form>
+    <br>
+
+    <section>
+      {{#each tweets}}
+      <div class="card" style="width: 100">
+        {{!-- <img src="..." class="card-img-top" alt="..."> --}}
+        <div class="card-body">
+          <h5>{{this.User.name}}</h5>
+          {{!-- <h5 class="card-title">Card title</h5> --}}
+          <p class="card-text">{{this.description}} </p>
+        </div>
+      </div>
+      {{/each}}
+    </section>
   </div>
+
   <div class="col-3">recommend</div>
 </div>
