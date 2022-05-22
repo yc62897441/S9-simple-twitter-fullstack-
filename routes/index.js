@@ -1,4 +1,5 @@
 const userController = require('../controllers/userController')
+const tweetController = require('../controllers/tweetController')
 
 const authenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -21,7 +22,7 @@ module.exports = (app, passport) => {
 
   // 一般用戶介面 A3-developer in charge
   app.get('/tweets', (req, res) => { return res.render('index') })
-  app.post('/tweets', (req, res) => { })
+  app.post('/tweets', tweetController.postTweet)
   app.get('/tweets/:id/replies', (req, res) => { })
   app.post('/tweets/:id/replies', (req, res) => { })
   app.post('/tweets/:id/like', (req, res) => { })

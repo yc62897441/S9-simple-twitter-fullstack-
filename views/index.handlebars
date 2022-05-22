@@ -1,1 +1,16 @@
 <h1>user index</h1>
+
+<div class="row">
+  <div class="col-3">profile</div>
+  <div class="col-6">
+    <h3>首頁</h3>
+    <form action="/tweets" method="post">
+      <div class="mt-3">
+        <label for="tweet" class="form-label"></label>
+        <input type="text" class="form-control" id="tweet" name="tweet" value="{{tweet}}" required>
+      </div>
+      <button class="btn btn-primary" type="submit">推文</button>
+    </form>
+  </div>
+  <div class="col-3">recommend</div>
+</div>
