@@ -36,7 +36,7 @@ module.exports = (app, passport) => {
 
   // 使用者資訊介面修改 in charge 未定
   app.get('/api/users/:id', (req, res) => { })
-  app.post('/api/users/:id', (req, res) => { })
+  app.put('/api/users/:id', userController.putUserApi)
 
   // 追蹤功能 in charge 未定
   app.post('/followships', (req, res) => { })

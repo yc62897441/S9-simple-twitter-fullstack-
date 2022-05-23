@@ -52,8 +52,20 @@ const userController = {
 
   signin: (req, res) => {
     return res.redirect('/')
-  }
+  },
 
+  putUserApi: (req, res) => {
+    User.findByPk(req.user.id)
+      .then(user => {
+        user.update({
+          name: req.body.name,
+          introduction: req.body.introduction
+        })
+          .then(user => {
+            return res.redirect('/tweets')
+          })
+      })
+  }
 }
 
 module.exports = userController
