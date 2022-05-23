@@ -104,9 +104,6 @@ const userController = {
           Tweet: d.Tweet.dataValues,
           TweetUser: d.Tweet.User.dataValues
         }))
-        console.log('data[0]', data[0])
-        console.log('data[0].Tweet', data[0].Tweet)
-        console.log('data[0].TweetUser', data[0].TweetUser)
         return res.render('userReplies', { replies: data })
       })
   }
