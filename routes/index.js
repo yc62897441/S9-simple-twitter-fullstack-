@@ -47,7 +47,8 @@ module.exports = (app, passport) => {
   app.post('/tweets/:id/unlike', isUser, tweetController.unlikeTweet)
 
   // 一般用戶使用者資訊介面 A3-developer in charge
-  app.get('/users/:id/tweets', isUser, (req, res) => { })
+  app.get('/users/:id/tweets', isUser, userController.getTweets)
+  app.get('/users/:id/tweets&replies', isUser, (req, res) => { })
   app.get('/users/:id/followings', isUser, (req, res) => { })
   app.get('/users/:id/followers', isUser, (req, res) => { })
   app.get('/users/:id/likes', isUser, (req, res) => { })

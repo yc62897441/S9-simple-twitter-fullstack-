@@ -1,5 +1,8 @@
 const db = require('../models')
 const User = db.User
+const Tweet = db.Tweet
+const Reply = db.Reply
+const Like = db.Like
 
 const bcrypt = require('bcryptjs')
 
@@ -70,8 +73,23 @@ const userController = {
           introduction: req.body.introduction
         })
           .then(user => {
-            return res.redirect('/tweets')
+            return res.redirect(`/users/${req.user.id}/tweets`)
           })
+      })
+  },
+
+  getTweets: (req, res) => {
+    const userId = req.user.id
+    const paramsId = req.params.id
+    Tweet.findAll({ where: { UserId: paramsId }, include: [User, Reply, { model: Like, include: User }] })
+      .then(tweets => {
+        const data = tweets.map(d => ({
+          ...d.dataValues,
+          isUserliked: d.Likes.map(d => d.User.dataValues.id).includes(userId),
+          replyNum: d.Replies.length,
+          likeUserNum: d.Likes.length
+        }))
+        return res.render('userTweets', { tweets: data })
       })
   }
 }

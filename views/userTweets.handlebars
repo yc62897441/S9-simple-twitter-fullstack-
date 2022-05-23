@@ -1,0 +1,110 @@
+<div class="row">
+  {{!-- 畫面左側 --}}
+  <div class="col-3 d-flex flex-column align-items-center">
+    <div class="d-flex flex-column align-items-center" style="width: 50%;">
+      <a class="btn btn-primary mt-1 w-100" href="/tweets">首頁</a>
+      <a class="btn btn-primary mt-1 w-100" href="/users/{{user.id}}/tweets">個人資料</a>
+      <div class="mt-1">設定</div>
+    </div>
+  </div>
+
+  {{!-- 畫面中間 --}}
+  <div class="col-6">
+
+    <section>
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        編輯個人資料
+      </button>
+      <!-- Modal 編輯個人資料 -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form action="/api/users/{{user.id}}?_method=PUT" method="post">
+              <div class="modal-header d-flex flex-row justify-content-between">
+                <div class="d-flex flex-row align-items-center">
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <h5 class="modal-title ms-2" id="exampleModalLabel">編輯個人資料</h5>
+                </div>
+                <div>
+                  <button type="submit" class="btn btn-primary">儲存</button>
+                </div>
+              </div>
+              <div class="modal-body">
+                <div class="mt-3">
+                  <label for="name" class="form-label">名稱</label>
+                  <input type="text" class="form-control" id="name" name="name" value="{{user.name}}" required>
+                </div>
+                <div class="mt-3">
+                  <label for="introduction" class="form-label">自我介紹</label>
+                  <input type="text" class="form-control" id="introduction" name="introduction"
+                    value="{{user.introduction}}">
+                </div>
+              </div>
+              {{!-- <div class="modal-footer"></div> --}}
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" href="/users/{{user.id}}/tweets">推文</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/users/{{user.id}}/tweets&replies">推文與回覆</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/users/{{user.id}}/likes">喜歡的內容</a>
+      </li>
+    </ul>
+
+    {{!-- 新推文form --}}
+    <form action="/tweets" method="post">
+      <div class="mt-3">
+        <label for="tweet" class="form-label"></label>
+        <input type="text" class="form-control" id="tweet" name="tweet" required>
+      </div>
+      <button class="btn btn-primary" type="submit">推文</button>
+    </form>
+    <br>
+
+    {{!-- 推文s --}}
+    <section>
+      {{#each tweets}}
+      <div class="card" style="width: 100">
+        {{!-- <img src="..." class="card-img-top" alt="..."> --}}
+        <div class="card-body">
+          <h5>{{this.User.name}}</h5>
+          {{!-- <h5 class="card-title">Card title</h5> --}}
+          <p class="card-text">{{this.description}} </p>
+
+          {{!-- like or unlike 推文 --}}
+          <div class="d-flex flex-row">
+            <p>Replies: {{this.replyNum}}</p>
+            <p>Likes: {{this.likeUserNum}}</p>
+          </div>
+          
+          {{#if this.isUserliked}}
+          <form action="/tweets/{{this.id}}/unlike" method="post">
+            <button class="btn btn-success" type="submit">Unlike</button>
+          </form>
+          {{else}}
+          <form action="/tweets/{{this.id}}/like" method="post">
+            <button class="btn btn-success" type="submit">Like</button>
+          </form>
+          {{/if}}
+        </div>
+      </div>
+      <br>
+      {{/each}}
+    </section>
+
+
+  </div>
+
+  {{!-- 畫面右側 --}}
+  <div class="col-3">recommend</div>
+</div>

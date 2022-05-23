@@ -11,7 +11,7 @@ const tweetController = {
       .then(tweets => {
         const data = tweets.map(d => ({
           ...d.dataValues,
-          likeUsers: d.Likes.map(d => d.User.dataValues.id).length,
+          likeUserNum: d.Likes.map(d => d.User.dataValues.id).length,
           isUserliked: d.Likes.map(d => d.User.dataValues.id).includes(userId)
         }))
         // 如果沒用上面的寫法，直接把tweets傳出去，同一個tweet的replies會被拆分開來，變成多個tweet個夾帶一個reply
@@ -47,7 +47,7 @@ const tweetController = {
       TweetId: req.params.id
     })
       .then(like => {
-        res.redirect('/tweets')
+        res.redirect('back')
       })
   },
 
@@ -56,7 +56,7 @@ const tweetController = {
       .then(like => {
         like.destroy()
           .then(() => {
-            res.redirect('/tweets')
+            res.redirect('back')
           })
       })
   }
