@@ -25,8 +25,8 @@ module.exports = (app, passport) => {
   app.post('/tweets', tweetController.postTweet)
   app.get('/tweets/:id/replies', (req, res) => { })
   app.post('/tweets/:id/replies', tweetController.postReply)
-  app.post('/tweets/:id/like', (req, res) => { })
-  app.post('/tweets/:id/unlike', (req, res) => { })
+  app.post('/tweets/:id/like', tweetController.likeTweet)
+  app.post('/tweets/:id/unlike', tweetController.unlikeTweet)
 
   // 一般用戶使用者資訊介面 A3-developer in charge
   app.get('/users/:id/tweets', (req, res) => { })
