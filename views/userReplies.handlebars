@@ -51,10 +51,10 @@
 
     <ul class="nav nav-tabs">
       <li class="nav-item">
-        <a class="nav-link active" href="/users/{{user.id}}/tweets">推文</a>
+        <a class="nav-link" href="/users/{{user.id}}/tweets">推文</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/users/{{user.id}}/tweetsAndReplies">推文與回覆</a>
+        <a class="nav-link active" href="/users/{{user.id}}/tweetsAndReplies">推文與回覆</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/users/{{user.id}}/likes">喜歡的內容</a>
@@ -86,7 +86,7 @@
             <p>Replies: {{this.replyNum}}</p>
             <p>Likes: {{this.likeUserNum}}</p>
           </div>
-          
+
           {{#if this.isUserliked}}
           <form action="/tweets/{{this.id}}/unlike" method="post">
             <button class="btn btn-success" type="submit">Unlike</button>

@@ -91,6 +91,20 @@ const userController = {
         }))
         return res.render('userTweets', { tweets: data })
       })
+  },
+
+  getTweetsAndReplies: (req, res) => {
+    const userId = req.user.id
+    const paramsId = req.params.id
+    Reply.findAll({ where: { UserId: paramsId }, include: [{ model: Tweet, include: User }] })
+      .then(replies => {
+        const data = replies.map(d => ({
+          ...d.dataValues,
+        }))
+        console.log('data[0]', data[0])
+
+        return res.render('userReplies', { replies: data })
+      })
   }
 }
 
