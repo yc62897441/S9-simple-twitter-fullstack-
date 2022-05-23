@@ -26,7 +26,7 @@ const tweetController = {
       description: req.body.tweet
     })
       .then(tweet => {
-        return res.render('index')
+        return res.redirect('back')
       })
   },
 
@@ -37,7 +37,7 @@ const tweetController = {
       comment: req.body.comment
     })
       .then(reply => {
-        res.redirect('/tweets')
+        return res.redirect('back')
       })
   },
 
