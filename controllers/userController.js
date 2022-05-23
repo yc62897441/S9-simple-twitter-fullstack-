@@ -96,13 +96,17 @@ const userController = {
   getTweetsAndReplies: (req, res) => {
     const userId = req.user.id
     const paramsId = req.params.id
-    Reply.findAll({ where: { UserId: paramsId }, include: [{ model: Tweet, include: User }] })
+    Reply.findAll({ where: { UserId: paramsId }, include: [User, { model: Tweet, include: User }] })
       .then(replies => {
         const data = replies.map(d => ({
           ...d.dataValues,
+          User: d.User.dataValues,
+          Tweet: d.Tweet.dataValues,
+          TweetUser: d.Tweet.User.dataValues
         }))
         console.log('data[0]', data[0])
-
+        console.log('data[0].Tweet', data[0].Tweet)
+        console.log('data[0].TweetUser', data[0].TweetUser)
         return res.render('userReplies', { replies: data })
       })
   }
