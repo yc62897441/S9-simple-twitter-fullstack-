@@ -89,11 +89,11 @@ const userController = {
           replyNum: d.Replies.length,
           likeUserNum: d.Likes.length
         }))
-        return res.render('userTweets', { tweets: data })
+        return res.render('userTweets', { tweets: data, paramsId: paramsId })
       })
   },
 
-  getTweetsAndReplies: (req, res) => {
+  getReplies: (req, res) => {
     const userId = req.user.id
     const paramsId = req.params.id
     Reply.findAll({ where: { UserId: paramsId }, include: [User, { model: Tweet, include: User }] })
@@ -104,7 +104,7 @@ const userController = {
           Tweet: d.Tweet.dataValues,
           TweetUser: d.Tweet.User.dataValues
         }))
-        return res.render('userReplies', { replies: data })
+        return res.render('userReplies', { replies: data, paramsId: paramsId })
       })
   }
 }

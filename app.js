@@ -26,6 +26,7 @@ app.use((req, res, next) => {
   res.locals.success_messages = req.flash('success_messages')
   res.locals.error_messages = req.flash('error_messages')
   res.locals.user = req.user
+  res.locals.alreadySignin = 
   // 之後使用這個
   // res.locals.user = helpers.getUser(req) // 取代 req.user
   next()
