@@ -54,6 +54,14 @@ const userController = {
     return res.redirect('/')
   },
 
+  adminSigninPage: (req, res) => {
+    return res.render('admin/signin')
+  },
+
+  adminSignin: (req, res) => {
+    return res.redirect('/admin/tweets')
+  },
+
   putUserApi: (req, res) => {
     User.findByPk(req.user.id)
       .then(user => {
