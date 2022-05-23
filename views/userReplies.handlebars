@@ -51,10 +51,10 @@
 
     <ul class="nav nav-tabs">
       <li class="nav-item">
-        <a class="nav-link active" href="/users/{{user.id}}/tweets">推文</a>
+        <a class="nav-link" href="/users/{{user.id}}/tweets">推文</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/users/{{user.id}}/tweetsAndReplies">推文與回覆</a>
+        <a class="nav-link active" href="/users/{{user.id}}/tweetsAndReplies">推文與回覆</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/users/{{user.id}}/likes">喜歡的內容</a>
@@ -73,20 +73,21 @@
 
     {{!-- 推文s --}}
     <section>
-      {{#each tweets}}
+      {{#each replies}}
       <div class="card" style="width: 100">
         {{!-- <img src="..." class="card-img-top" alt="..."> --}}
         <div class="card-body">
           <h5>{{this.User.name}}</h5>
           {{!-- <h5 class="card-title">Card title</h5> --}}
-          <p class="card-text">{{this.description}} </p>
+          <p class="card-text">回覆 <a href="/users/{{this.TweetUser.id}}/tweets">@{{this.TweetUser.name}}</a> </p>
+          <p class="card-text">{{this.comment}} </p>
 
           {{!-- like or unlike 推文 --}}
-          <div class="d-flex flex-row">
+          {{!-- <div class="d-flex flex-row">
             <p>Replies: {{this.replyNum}}</p>
             <p>Likes: {{this.likeUserNum}}</p>
           </div>
-          
+
           {{#if this.isUserliked}}
           <form action="/tweets/{{this.id}}/unlike" method="post">
             <button class="btn btn-success" type="submit">Unlike</button>
@@ -95,10 +96,14 @@
           <form action="/tweets/{{this.id}}/like" method="post">
             <button class="btn btn-success" type="submit">Like</button>
           </form>
-          {{/if}}
+          {{/if}} --}}
+
+
         </div>
       </div>
+
       <br>
+
       {{/each}}
     </section>
 
