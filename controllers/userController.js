@@ -115,7 +115,16 @@ const userController = {
           Tweet: d.Tweet.dataValues,
           TweetUser: d.Tweet.User.dataValues
         }))
-        return res.render('userReplies', { replies: data, paramsId: paramsId })
+        User.findByPk(paramsId)
+          .then(paramsUser => {
+            paramsUser = paramsUser.dataValues
+
+            console.log('req.user.id', typeof req.user.id)
+            console.log('req.user.id', typeof data[0].TweetUser.id)
+
+
+            return res.render('userReplies', { replies: data, paramsId: paramsId, paramsUser: paramsUser })
+          })
       })
   }
 }
