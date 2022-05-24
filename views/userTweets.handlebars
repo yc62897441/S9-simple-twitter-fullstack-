@@ -20,11 +20,37 @@
 
   {{!-- 畫面中間 --}}
   <div class="col-6">
+    {{!-- 個人資訊 --}}
     <section>
-      <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        編輯個人資料
-      </button>
+      <div>
+        {{!-- Banner --}}
+        <div
+          style="width: 100%; height:200px; background-image: url('https://i.imgur.com/vO90Cn7.jpeg'); background-position: center center; background-size: cover">
+        </div>
+        {{!-- avatar & 編輯個人資料 button --}}
+        <div class="d-flex flex-row justify-content-between mx-3">
+          <div
+            style="margin-top: -65px; width: 130px; height: 130px; border-radius:100%; border: 2px solid white; background-image: url('https://i.imgur.com/R1VRWD3.jpeg'); background-size: cover">
+          </div>
+          <!-- Button trigger modal 編輯個人資料 -->
+          {{#ifCond user.id paramsUser.id}}
+          <button type="button" class="mt-1 btn btn-primary" style="height: 40px; border-radius:2em"
+            data-bs-toggle="modal" data-bs-target="#exampleModal">
+            編輯個人資料
+          </button>
+          {{/ifCond}}
+        </div>
+        {{!-- 個人 info --}}
+        <div class="mx-3 mt-1">
+          <h5 style="font-weight: 900;">{{paramsUser.name}}</h5>
+          <h6 style="font-size: 0.8em; color: #909090; font-weight: 900;">
+            <a href="/users/{{paramsUser.id}}/tweets">@{{paramsUser.name}}</a>
+          </h6>
+          <h6>{{paramsUser.introduction}}</h6>
+          <div>followers and followings(未完成)</div>
+        </div>
+      </div>
+
       <!-- Modal 編輯個人資料 -->
       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -57,7 +83,8 @@
       </div>
     </section>
 
-    <ul class="nav nav-tabs">
+    {{!-- List --}}
+    <ul class="mt-2 nav nav-tabs">
       <li class="nav-item">
         <a class="nav-link active" href="/users/{{paramsId}}/tweets">推文</a>
       </li>
@@ -68,16 +95,6 @@
         <a class="nav-link" href="/users/{{paramsId}}/likes">喜歡的內容</a>
       </li>
     </ul>
-
-    {{!-- 新推文form --}}
-    <form action="/tweets" method="post">
-      <div class="mt-3">
-        <label for="tweet" class="form-label"></label>
-        <input type="text" class="form-control" id="tweet" name="tweet" required>
-      </div>
-      <button class="btn btn-primary" type="submit">推文</button>
-    </form>
-    <br>
 
     {{!-- 推文s --}}
     <section>
@@ -106,7 +123,6 @@
           {{/if}}
         </div>
       </div>
-      <br>
       {{/each}}
     </section>
   </div>
@@ -115,3 +131,13 @@
   {{!-- 畫面右側 --}}
   <div class="col-3">recommend</div>
 </div>
+
+{{!-- 新推文form --}}
+{{!-- <form action="/tweets" method="post">
+  <div class="mt-3">
+    <label for="tweet" class="form-label"></label>
+    <input type="text" class="form-control" id="tweet" name="tweet" required>
+  </div>
+  <button class="btn btn-primary" type="submit">推文</button>
+</form>
+<br> --}}

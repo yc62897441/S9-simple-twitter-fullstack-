@@ -10,7 +10,7 @@ const methodOverride = require('method-override')
 const app = express()
 const port = 3000
 
-app.engine('handlebars', exphbs.engine({ defaultLayout: 'main' }))
+app.engine('handlebars', exphbs.engine({ defaultLayout: 'main', helpers: require('./config/handlebars-helpers') }))
 app.set('view engine', 'handlebars')
 
 app.use(bodyParser.urlencoded({ extended: true }))

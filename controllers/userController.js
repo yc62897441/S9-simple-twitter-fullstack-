@@ -96,7 +96,11 @@ const userController = {
           replyNum: d.Replies.length,
           likeUserNum: d.Likes.length
         }))
-        return res.render('userTweets', { tweets: data, paramsId: paramsId })
+        User.findByPk(paramsId)
+          .then(paramsUser => {
+            paramsUser = paramsUser.dataValues
+            return res.render('userTweets', { tweets: data, paramsId: paramsId, paramsUser: paramsUser })
+          })
       })
   },
 
