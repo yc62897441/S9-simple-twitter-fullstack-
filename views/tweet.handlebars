@@ -1,0 +1,110 @@
+<div class="row mt-3">
+  {{!-- 畫面左側 --}}
+  <div class="col-3 d-flex flex-column align-items-center justify-content-between" style="height: 95vh;">
+    <div class="d-flex flex-column align-items-center" style="width: 50%;">
+      <div class="w-100">
+        <a href="/">
+          <img src="https://meethub.bnext.com.tw/wp-content/uploads/2019/03/medium_alpha-logo-square-89.png"
+            width="50px">
+          </img>
+        </a>
+      </div>
+      <a class="btn btn-primary mt-1 w-100" href="/tweets">首頁</a>
+      <a class="btn btn-primary mt-1 w-100" href="/users/{{user.id}}/tweets">個人資料</a>
+      <a class="btn btn-primary mt-1 w-100" href="/">設定</a>
+    </div>
+    <div class="d-flex flex-column align-items-center" style="width: 50%;">
+      <a class="btn btn-primary mt-1 w-100" href="/signout">登出</a>
+    </div>
+  </div>
+
+  {{!-- 畫面中間 --}}
+  <div class="col-6">
+    <h3><a href="javascript:history.back()">←</a>推文</h3>
+
+    {{!-- 推文 --}}
+    <div class="card" style="width: 100">
+      <div class="card-body">
+        {{!-- 推文 之 個人資訊 --}}
+        <div class="d-flex flex-row align-items-center">
+          <img src="https://pic.pimg.tw/loftwarm/1647911559-2489802606-g.png" width="50px">
+          <div class="ms-2">
+            <h6>{{tweet.User.dataValues.name}}</h6>
+            <h6>
+              <a href="/users/{{tweet.User.dataValues.id}}/tweets">@{{tweet.User.dataValues.name}}</a>
+            </h6>
+          </div>
+        </div>
+
+        {{!-- 推文 之 內文 --}}
+        <div class="mt-2">
+          <p class="card-text" style="font-size: 1.6em;">{{tweet.description}} </p>
+          <h6>時間戳記(待補)</h6>
+        </div>
+
+        {{!-- 推文 之 footer --}}
+        {{!-- like or unlike 推文 --}}
+        <div class="d-flex flex-row">
+          <div class="d-flex flex-row">
+            <p style="font-weight: 900;">{{tweet.replyNum}}</p>
+            <p style="color: #909090; font-weight: 900;">回覆</p>
+          </div>
+          <div class="d-flex flex-row ms-2">
+            <p style="font-weight: 900;">{{tweet.likeUserNum}}</p>
+            <p style="color: #909090; font-weight: 900;">喜歡次數</p>
+          </div>
+        </div>
+
+        <div class="d-flex flex-row align-items-center">
+          <button class="btn btn-success me-2" type="submit">回覆(未完成)</button>
+          {{#if tweet.isUserliked}}
+          <form action="/tweets/{{this.id}}/unlike" method="post">
+            <button class="btn btn-success" type="submit">Unlike</button>
+          </form>
+          {{else}}
+          <form action="/tweets/{{this.id}}/like" method="post">
+            <button class="btn btn-success" type="submit">Like</button>
+          </form>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+
+    {{!-- 推文 之 回覆s --}}
+    {{#if tweet.Replies}}
+    <section>
+      {{#each tweet.Replies}}
+      <div class="card" style="width: 100">
+        <div class="card-body">
+          <div class="d-flex flex-row align-items-start">
+            <img src="https://pic.pimg.tw/loftwarm/1647911559-2489802606-g.png" width="50px">
+
+            {{!-- 回覆 之 個人資訊 --}}
+            <div class="ms-2">
+              <div class="d-flex flex-row align-items-center">
+                <h6>{{this.User.dataValues.name}}</h6>
+                <h6 class="ms-1">
+                  <a href="/users/{{this.User.dataValues.id}}/tweets">@{{this.User.dataValues.name}}</a>
+                </h6>
+                <h6 class="ms-1">時間戳記(待補)</h6>
+              </div>
+              <div>
+                <p class="card-text">回覆 <a
+                    href="/users/{{../tweet.User.dataValues.id}}/tweets">@{{../tweet.User.dataValues.name}}</a> </p>
+              </div>
+              {{!-- 回覆 之 內文 --}}
+              <div class="mt-2">
+                <p class="card-text">{{this.dataValues.comment}} </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </section>
+    {{/if}}
+  </div>
+
+  {{!-- 畫面右側 --}}
+  <div class="col-3">recommend</div>
+</div>
