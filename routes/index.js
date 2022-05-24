@@ -52,7 +52,7 @@ module.exports = (app, passport) => {
   app.get('/users/:id/replies', isUser, userController.getReplies)
   app.get('/users/:id/followings', isUser, (req, res) => { })
   app.get('/users/:id/followers', isUser, (req, res) => { })
-  app.get('/users/:id/likes', isUser, (req, res) => { })
+  app.get('/users/:id/likes', isUser, userController.getLikes)
 
   // 使用者資訊介面修改 in charge 未定
   app.get('/api/users/:id', isUser, (req, res) => { })

@@ -1,0 +1,158 @@
+<div class="row mt-3">
+  {{!-- 畫面左側 --}}
+  <div class="col-3 d-flex flex-column align-items-center justify-content-between" style="height: 95vh;">
+    <div class="d-flex flex-column align-items-center" style="width: 50%;">
+      <div class="w-100">
+        <a href="/">
+          <img src="https://meethub.bnext.com.tw/wp-content/uploads/2019/03/medium_alpha-logo-square-89.png"
+            width="50px">
+          </img>
+        </a>
+      </div>
+      <a class="btn btn-primary mt-1 w-100" href="/tweets">首頁</a>
+      <a class="btn btn-primary mt-1 w-100" href="/users/{{user.id}}/tweets">個人資料</a>
+      <a class="btn btn-primary mt-1 w-100" href="/">設定</a>
+    </div>
+    <div class="d-flex flex-column align-items-center" style="width: 50%;">
+      <a class="btn btn-primary mt-1 w-100" href="/signout">登出</a>
+    </div>
+  </div>
+
+  {{!-- 畫面中間 --}}
+  <div class="col-6">
+    {{!-- 個人資訊 --}}
+    <section>
+      <div>
+        {{!-- Banner --}}
+        <div
+          style="width: 100%; height:200px; background-image: url('https://i.imgur.com/vO90Cn7.jpeg'); background-position: center center; background-size: cover">
+        </div>
+        {{!-- avatar & 編輯個人資料 button --}}
+        <div class="d-flex flex-row justify-content-between mx-3">
+          <div
+            style="margin-top: -65px; width: 130px; height: 130px; border-radius:100%; border: 2px solid white; background-image: url('https://i.imgur.com/R1VRWD3.jpeg'); background-size: cover">
+          </div>
+          <!-- Button trigger modal 編輯個人資料 -->
+          {{#ifCond user.id paramsUser.id}}
+          <button type="button" class="mt-1 btn btn-primary" style="height: 40px; border-radius:2em"
+            data-bs-toggle="modal" data-bs-target="#exampleModal">
+            編輯個人資料
+          </button>
+          {{/ifCond}}
+        </div>
+        {{!-- 個人 info --}}
+        <div class="mx-3 mt-1">
+          <h5 style="font-weight: 900;">{{paramsUser.name}}</h5>
+          <h6 style="font-size: 0.8em; color: #909090; font-weight: 900;">
+            <a href="/users/{{paramsUser.id}}/tweets">@{{paramsUser.name}}</a>
+          </h6>
+          <h6>{{paramsUser.introduction}}</h6>
+          <div>followers and followings(未完成)</div>
+        </div>
+      </div>
+
+      <!-- Modal 編輯個人資料 -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form action="/api/users/{{user.id}}?_method=PUT" method="post">
+              <div class="modal-header d-flex flex-row justify-content-between">
+                <div class="d-flex flex-row align-items-center">
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <h5 class="modal-title ms-2" id="exampleModalLabel">編輯個人資料</h5>
+                </div>
+                <div>
+                  <button type="submit" class="btn btn-primary">儲存</button>
+                </div>
+              </div>
+              <div class="modal-body">
+                <div class="mt-3">
+                  <label for="name" class="form-label">名稱</label>
+                  <input type="text" class="form-control" id="name" name="name" value="{{user.name}}" required>
+                </div>
+                <div class="mt-3">
+                  <label for="introduction" class="form-label">自我介紹</label>
+                  <input type="text" class="form-control" id="introduction" name="introduction"
+                    value="{{user.introduction}}">
+                </div>
+              </div>
+              {{!-- <div class="modal-footer"></div> --}}
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {{!-- List --}}
+    <ul class="mt-2 nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link" href="/users/{{paramsId}}/tweets">推文</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/users/{{paramsId}}/replies">推文與回覆</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="/users/{{paramsId}}/likes">喜歡的內容</a>
+      </li>
+    </ul>
+
+    {{!-- 喜歡的內容s --}}
+    <section>
+      {{#each likes}}
+      <div class="card" style="width: 100">
+        <div class="card-body">
+          <div class="d-flex flex-row align-items-start">
+            <img src="https://pic.pimg.tw/loftwarm/1647911559-2489802606-g.png" width="50px">
+            {{!-- 喜歡的內容 之 個人資訊 --}}
+            <div class="ms-2">
+              <div class="d-flex flex-row align-items-center">
+                <h6>{{this.Tweet.User.dataValues.name}}</h6>
+                <h6 class="ms-1">
+                  <a href="/users/{{this.Tweet.User.dataValues.id}}/tweets">@{{this.Tweet.User.dataValues.name}}</a>
+                </h6>
+                <h6 class="ms-1">時間戳記(待補)</h6>
+              </div>
+
+              {{!-- 喜歡的內容 之 內文 --}}
+              <div>
+                <a href="/tweets/{{this.Tweet.dataValues.id}}">
+                  <p class="card-text">{{this.Tweet.dataValues.description}} </p>
+                </a>
+              </div>
+
+              {{!-- 喜歡的內容 之 footer --}}
+              {{!-- like or unlike 喜歡的內容 --}}
+              <div class="d-flex flex-row">
+                <div class="d-flex flex-row">
+                  <p style="font-weight: 900;">{{this.replyNum}}</p>
+                  <p style="color: #909090; font-weight: 900;">回覆</p>
+                </div>
+                <div class="d-flex flex-row ms-2">
+                  <p style="font-weight: 900;">{{this.likeUserNum}}</p>
+                  <p style="color: #909090; font-weight: 900;">喜歡次數</p>
+                </div>
+              </div>
+
+              <div class="d-flex flex-row align-items-center">
+                <button class="btn btn-success me-2" type="submit">回覆(未完成)</button>
+                {{#if this.isUserliked}}
+                <form action="/tweets/{{this.id}}/unlike" method="post">
+                  <button class="btn btn-success" type="submit">Unlike</button>
+                </form>
+                {{else}}
+                <form action="/tweets/{{this.id}}/like" method="post">
+                  <button class="btn btn-success" type="submit">Like</button>
+                </form>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </section>
+  </div>
+
+  {{!-- 畫面右側 --}}
+  <div class="col-3">recommend</div>
+</div>

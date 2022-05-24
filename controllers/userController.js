@@ -118,12 +118,27 @@ const userController = {
         User.findByPk(paramsId)
           .then(paramsUser => {
             paramsUser = paramsUser.dataValues
-
-            console.log('req.user.id', typeof req.user.id)
-            console.log('req.user.id', typeof data[0].TweetUser.id)
-
-
             return res.render('userReplies', { replies: data, paramsId: paramsId, paramsUser: paramsUser })
+          })
+      })
+  },
+
+  getLikes: (req, res) => {
+    const userId = req.user.id
+    const paramsId = req.params.id
+    Like.findAll({ where: { UserId: paramsId }, include: [User, { model: Tweet, include: [User, Reply, Like] }] })
+      .then(likes => {
+        const data = likes.map(d => ({
+          ...d.dataValues,
+          isUserliked: d.UserId.toString().includes(userId.toString()),
+          replyNum: d.Tweet.Replies.length,
+          likeUserNum: d.Tweet.Likes.length
+        }))
+        console.log('data[0].', data[0])
+        User.findByPk(paramsId)
+          .then(paramsUser => {
+            paramsUser = paramsUser.dataValues
+            return res.render('userLikes', { likes: data, paramsId: paramsId, paramsUser: paramsUser })
           })
       })
   }
