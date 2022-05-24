@@ -57,6 +57,13 @@ const userController = {
     return res.redirect('/')
   },
 
+  signout: (req, res) => {
+    const messages = []
+    messages.push('成功登出')
+    req.logout()
+    res.render('signin', { messages })
+  },
+
   adminSigninPage: (req, res) => {
     return res.render('admin/signin')
   },

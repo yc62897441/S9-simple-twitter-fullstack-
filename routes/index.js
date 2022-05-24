@@ -70,5 +70,5 @@ module.exports = (app, passport) => {
   }), userController.signin)
   app.get('/signup', userController.signupPage)
   app.post('/signup', userController.signup)
-  app.get('/signout', (req, res) => { })
+  app.get('/signout', userController.signout)
 }
