@@ -3,6 +3,7 @@ const User = db.User
 const Tweet = db.Tweet
 const Reply = db.Reply
 const Like = db.Like
+const Followship = db.Followship
 const { Op } = require('sequelize')
 
 const bcrypt = require('bcryptjs')
@@ -136,6 +137,33 @@ const userController = {
                 }))
                 return res.render('userReplies', { replies: data, paramsId: paramsId, paramsUser: paramsUser, popularUsers: popularUsers })
               })
+          })
+      })
+  },
+
+  getFollowers: (req, res) => {
+    const userId = req.user.id
+    const paramsId = req.params.id
+    User.findByPk(paramsId, { include: [Tweet, { model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
+      .then(paramsUser => {
+        paramsUser = {
+          ...paramsUser.dataValues,
+          FollowingsId: paramsUser.Followings.map(d => d.dataValues.id),
+          Followers: paramsUser.Followers,
+          tweetNum: paramsUser.Tweets.length
+        }
+        paramsUser.Followers.forEach(d => {
+          d.isFollowedByUser = paramsUser.FollowingsId.includes(d.dataValues.id)
+        })
+        console.log('paramsUser', paramsUser)
+
+        User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
+          .then(users => {
+            const popularUsers = users.map(d => ({
+              ...d.dataValues,
+              isFollowedByUser: d.Followers.map(d => d.dataValues.id).includes(userId)
+            }))
+            return res.render('userFollowers', { paramsUser: paramsUser, popularUsers: popularUsers })
           })
       })
   },
