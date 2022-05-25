@@ -2,6 +2,7 @@ const userController = require('../controllers/userController')
 const tweetController = require('../controllers/tweetController')
 const followshipController = require('../controllers/followshipController')
 const settingController = require('../controllers/settingController')
+const adminController = require('../controllers/adminController')
 
 const authenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -36,7 +37,7 @@ module.exports = (app, passport) => {
     failureFlash: true
   }), isAdminUser, userController.adminSignin)
   // admin 用戶介面 A2-developer in charge
-  app.get('/admin/tweets', isAdminUser, (req, res) => { return res.render('admin/index') })
+  app.get('/admin/tweets', isAdminUser, adminController.getTweets)
   app.delete('/admin/tweets/:id', isAdminUser, (req, res) => { })
   app.get('/admin/users', isAdminUser, (req, res) => { })
 
