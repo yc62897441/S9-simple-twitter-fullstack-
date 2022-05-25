@@ -1,6 +1,7 @@
 const userController = require('../controllers/userController')
 const tweetController = require('../controllers/tweetController')
 const followshipController = require('../controllers/followshipController')
+const settingController = require('../controllers/settingController')
 
 const authenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -62,6 +63,9 @@ module.exports = (app, passport) => {
   // 追蹤功能 in charge 未定
   app.post('/followships/:id', isUser, followshipController.follow)
   app.delete('/followships/:id', isUser, followshipController.unfollow)
+
+  // 設定/更改個人資料
+  app.get('/setting', isUser, settingController.settingPage)
 
   // 註冊、登出、一般用戶登入 A2-developer in charge
   app.get('/signin', userController.signinPage)

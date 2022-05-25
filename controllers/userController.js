@@ -135,7 +135,7 @@ const userController = {
                   isFollowedByUser: d.Followers.map(d => d.dataValues.id).includes(userId)
                 }))
                 return res.render('userReplies', { replies: data, paramsId: paramsId, paramsUser: paramsUser, popularUsers: popularUsers })
-              })          
+              })
           })
       })
   },
