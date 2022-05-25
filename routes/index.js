@@ -66,6 +66,7 @@ module.exports = (app, passport) => {
 
   // 設定/更改個人資料
   app.get('/setting', isUser, settingController.settingPage)
+  app.put('/setting', isUser, settingController.setting)
 
   // 註冊、登出、一般用戶登入 A2-developer in charge
   app.get('/signin', userController.signinPage)
