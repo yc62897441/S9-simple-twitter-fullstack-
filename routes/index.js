@@ -38,7 +38,7 @@ module.exports = (app, passport) => {
   }), isAdminUser, userController.adminSignin)
   // admin 用戶介面 A2-developer in charge
   app.get('/admin/tweets', isAdminUser, adminController.getTweets)
-  app.delete('/admin/tweets/:id', isAdminUser, (req, res) => { })
+  app.delete('/admin/tweets/:id', isAdminUser, adminController.deleteTweet)
   app.get('/admin/users', isAdminUser, adminController.getUsers)
 
   // 一般用戶介面 A3-developer in charge

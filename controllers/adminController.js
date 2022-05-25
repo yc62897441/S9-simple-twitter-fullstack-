@@ -3,7 +3,6 @@ const User = db.User
 const Tweet = db.Tweet
 const Reply = db.Reply
 const Like = db.Like
-const { Op } = require('sequelize')
 
 const adminController = {
   getTweets: (req, res) => {
@@ -18,18 +17,29 @@ const adminController = {
       })
   },
 
+  deleteTweet: (req, res) => {
+    const tweetId = req.params.id
+    Tweet.findByPk(tweetId)
+      .then(tweet => {
+        tweet.destroy()
+        .then(() => {
+          return res.redirect('back')
+        })
+      })
+  },
+
   getUsers: (req, res) => {
-    User.findAll({ include: [Reply, Like, { model: User, as: 'Followers' }, { model: User, as: 'Followings' } ]})
-    .then(users => {
-      const data = users.map(d => ({
-        ...d.dataValues, 
-        replyNum: d.Replies.length,
-        likeUserNum: d.Likes.length,
-        followerNum: d.Followers.length,
-        followingNum: d.Followings.length
-      }))
-      return res.render('admin/users', { users: data })
-    })
+    User.findAll({ include: [Reply, Like, { model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
+      .then(users => {
+        const data = users.map(d => ({
+          ...d.dataValues,
+          replyNum: d.Replies.length,
+          likeUserNum: d.Likes.length,
+          followerNum: d.Followers.length,
+          followingNum: d.Followings.length
+        }))
+        return res.render('admin/users', { users: data })
+      })
   }
 }
 
