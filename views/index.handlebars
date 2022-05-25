@@ -28,7 +28,9 @@
         {{!-- 推文 之 個人資訊 --}}
         <div class="d-flex flex-row align-items-start">
           <div class="d-flex flex-row align-items-center">
-            <img src="https://pic.pimg.tw/loftwarm/1647911559-2489802606-g.png" width="50px">
+            <div
+              style="width: 50px; height: 50px; border-radius:100%; background-image: url('{{user.avatar}}'); background-size: cover">
+            </div>
           </div>
           {{!-- 推文 之 內文 --}}
           <div class="ms-2" style="height: 100%; width:100%">
@@ -54,7 +56,9 @@
       <div class="card" style="width: 100">
         <div class="card-body">
           <div class="d-flex flex-row align-items-start">
-            <img src="https://pic.pimg.tw/loftwarm/1647911559-2489802606-g.png" width="50px">
+            <div style="width: 50px; height: 50px; border-radius:100%;  
+            background-image: url('{{this.User.dataValues.avatar}}'); background-size: cover">
+            </div>
             {{!-- 推文 之 個人資訊 --}}
             <div class="ms-2">
               <div class="d-flex flex-row align-items-center">
@@ -119,7 +123,9 @@
           <div class="card-body">
             <div class="d-flex flex-row justify-content-between">
               <div class="d-flex flex-row align-items-start">
-                <img src="https://pic.pimg.tw/loftwarm/1647911559-2489802606-g.png" width="50px">
+                <div
+                  style="width: 50px; height: 50px; border-radius:100%; background-image: url('{{this.avatar}}'); background-size: cover">
+                </div>
                 {{!-- 推文 之 個人資訊 --}}
                 <div class="ms-2">
                   <div class="d-flex flex-row align-items-center">
@@ -140,7 +146,8 @@
                 </form>
                 {{else}}
                 <form action="/followships/{{this.id}}" method="post">
-                  <button type="submit" class="mt-1 btn btn-outline-primary" style="height: 40px; border-radius:2em">追蹤</button>
+                  <button type="submit" class="mt-1 btn btn-outline-primary"
+                    style="height: 40px; border-radius:2em">追蹤</button>
                 </form>
                 {{/if}}
               </div>
