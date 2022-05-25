@@ -154,5 +154,49 @@
   </div>
 
   {{!-- 畫面右側 --}}
-  <div class="col-3">recommend</div>
+  <div class="col-3">
+    <div style="width: 80%">
+      <section>
+        <div class="card" style="width: 100">
+          <div class="card-body" style="margin-top: -10px; margin-bottom: -12px">
+            <h4>Popular</h4>
+          </div>
+        </div>
+        {{#each popularUsers}}
+        <div class="card" style="width: 100">
+          <div class="card-body">
+            <div class="d-flex flex-row justify-content-between">
+              <div class="d-flex flex-row align-items-start">
+                <img src="https://pic.pimg.tw/loftwarm/1647911559-2489802606-g.png" width="50px">
+                {{!-- 推文 之 個人資訊 --}}
+                <div class="ms-2">
+                  <div class="d-flex flex-row align-items-center">
+                    <h6>{{this.name}}</h6>
+                  </div>
+                  <div class="d-flex flex-row align-items-center">
+                    <h6 class="ms-1">
+                      <a href="/users/{{this.id}}/tweets">@{{this.name}}</a>
+                    </h6>
+                  </div>
+                </div>
+              </div>
+              <div>
+                {{#if isFollowedByUser}}
+                <form action="/followships/{{this.id}}?_method=DELETE" method="post">
+                  <button type="submit" class="mt-1 btn btn-primary" style="height: 40px; border-radius:2em">正在追蹤</button>
+                </form>
+                {{else}}
+                <form action="/followships/{{this.id}}" method="post">
+                  <button type="submit" class="mt-1 btn btn-outline-primary"
+                    style="height: 40px; border-radius:2em">追蹤</button>
+                </form>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </section>
+    </div>
+  </div>
 </div>

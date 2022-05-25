@@ -3,6 +3,7 @@ const User = db.User
 const Tweet = db.Tweet
 const Reply = db.Reply
 const Like = db.Like
+const { Op } = require('sequelize')
 
 const bcrypt = require('bcryptjs')
 
@@ -99,7 +100,15 @@ const userController = {
         User.findByPk(paramsId)
           .then(paramsUser => {
             paramsUser = paramsUser.dataValues
-            return res.render('userTweets', { tweets: data, paramsId: paramsId, paramsUser: paramsUser })
+
+            User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
+              .then(users => {
+                const popularUsers = users.map(d => ({
+                  ...d.dataValues,
+                  isFollowedByUser: d.Followers.map(d => d.dataValues.id).includes(userId)
+                }))
+                return res.render('userTweets', { tweets: data, paramsId: paramsId, paramsUser: paramsUser, popularUsers: popularUsers })
+              })
           })
       })
   },
@@ -118,7 +127,15 @@ const userController = {
         User.findByPk(paramsId)
           .then(paramsUser => {
             paramsUser = paramsUser.dataValues
-            return res.render('userReplies', { replies: data, paramsId: paramsId, paramsUser: paramsUser })
+
+            User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
+              .then(users => {
+                const popularUsers = users.map(d => ({
+                  ...d.dataValues,
+                  isFollowedByUser: d.Followers.map(d => d.dataValues.id).includes(userId)
+                }))
+                return res.render('userReplies', { replies: data, paramsId: paramsId, paramsUser: paramsUser, popularUsers: popularUsers })
+              })          
           })
       })
   },
@@ -138,7 +155,15 @@ const userController = {
         User.findByPk(paramsId)
           .then(paramsUser => {
             paramsUser = paramsUser.dataValues
-            return res.render('userLikes', { likes: data, paramsId: paramsId, paramsUser: paramsUser })
+
+            User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
+              .then(users => {
+                const popularUsers = users.map(d => ({
+                  ...d.dataValues,
+                  isFollowedByUser: d.Followers.map(d => d.dataValues.id).includes(userId)
+                }))
+                return res.render('userLikes', { likes: data, paramsId: paramsId, paramsUser: paramsUser, popularUsers: popularUsers })
+              })
           })
       })
   }

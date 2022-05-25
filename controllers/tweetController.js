@@ -3,6 +3,7 @@ const User = db.User
 const Tweet = db.Tweet
 const Reply = db.Reply
 const Like = db.Like
+const { Op } = require('sequelize')
 
 const tweetController = {
   getTweets: (req, res) => {
@@ -17,7 +18,15 @@ const tweetController = {
         }))
         // 如果沒用上面的寫法，直接把tweets傳出去，同一個tweet的replies會被拆分開來，變成多個tweet個夾帶一個reply
         // 例如原本應該是 tweet1 :{replies: [reply1, reply2]}，會變成 tweet1: {reply1}、tweet2: {reply2}
-        return res.render('index', { tweets: data })
+
+        User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
+          .then(users => {
+            const popularUsers = users.map(d => ({
+              ...d.dataValues,
+              isFollowedByUser: d.Followers.map(d => d.dataValues.id).includes(userId)
+            }))
+            return res.render('index', { tweets: data, popularUsers: popularUsers })
+          })
       })
   },
 
@@ -29,15 +38,21 @@ const tweetController = {
       include: [User, { model: Reply, include: [User] }, { model: Like, include: [User] }]
     })
       .then(tweet => {
-        console.log('tweet', tweet)
         const data = {
           ...tweet.dataValues,
           isUserliked: tweet.Likes.map(d => d.User.dataValues.id).includes(userId),
           replyNum: tweet.Replies.length,
           likeUserNum: tweet.Likes.length
         }
-        console.log('data', data)
-        return res.render('tweet', { tweet: data })
+
+        User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
+          .then(users => {
+            const popularUsers = users.map(d => ({
+              ...d.dataValues,
+              isFollowedByUser: d.Followers.map(d => d.dataValues.id).includes(userId)
+            }))
+            return res.render('tweet', { tweet: data, popularUsers: popularUsers })
+          })
       })
   },
 

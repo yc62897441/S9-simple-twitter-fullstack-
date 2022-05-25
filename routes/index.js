@@ -1,5 +1,6 @@
 const userController = require('../controllers/userController')
 const tweetController = require('../controllers/tweetController')
+const followshipController = require('../controllers/followshipController')
 
 const authenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -59,8 +60,8 @@ module.exports = (app, passport) => {
   app.put('/api/users/:id', isUser, userController.putUserApi)
 
   // 追蹤功能 in charge 未定
-  app.post('/followships', isUser, (req, res) => { })
-  app.delete('/followships/:id', isUser, (req, res) => { })
+  app.post('/followships/:id', isUser, followshipController.follow)
+  app.delete('/followships/:id', isUser, followshipController.unfollow)
 
   // 註冊、登出、一般用戶登入 A2-developer in charge
   app.get('/signin', userController.signinPage)
