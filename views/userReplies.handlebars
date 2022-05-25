@@ -44,7 +44,7 @@
         <div class="mx-3 mt-1">
           <h5 style="font-weight: 900;">{{paramsUser.name}}</h5>
           <h6 style="font-size: 0.8em; color: #909090; font-weight: 900;">
-            <a href="/users/{{paramsUser.id}}/tweets">@{{paramsUser.name}}</a>
+            <a href="/users/{{paramsUser.id}}/tweets">@{{paramsUser.account}}</a>
           </h6>
           <h6>{{paramsUser.introduction}}</h6>
           <div>followers and followings(未完成)</div>
@@ -110,14 +110,14 @@
               <div class="d-flex flex-row align-items-center">
                 <h6>{{this.User.name}}</h6>
                 <h6 class="ms-1">
-                  <a href="/users/{{this.User.id}}/tweets">@{{this.User.name}}</a>
+                  <a href="/users/{{this.User.id}}/tweets">@{{this.User.account}}</a>
                 </h6>
                 <h6 class="ms-1">時間戳記(待補)</h6>
               </div>
               <div>
                 {{!-- 回覆 之 對象 --}}
                 <div>
-                  <p class="card-text">回覆 <a href="/users/{{this.TweetUser.id}}/tweets">@{{this.TweetUser.name}}</a></p>
+                  <p class="card-text">回覆 <a href="/users/{{this.TweetUser.id}}/tweets">@{{this.TweetUser.account}}</a></p>
                 </div>
                 {{!-- 回覆 之內容 --}}
                 <div>
@@ -158,7 +158,7 @@
                   </div>
                   <div class="d-flex flex-row align-items-center">
                     <h6 class="ms-1">
-                      <a href="/users/{{this.id}}/tweets">@{{this.name}}</a>
+                      <a href="/users/{{this.id}}/tweets">@{{this.account}}</a>
                     </h6>
                   </div>
                 </div>

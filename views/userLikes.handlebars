@@ -44,7 +44,7 @@
         <div class="mx-3 mt-1">
           <h5 style="font-weight: 900;">{{paramsUser.name}}</h5>
           <h6 style="font-size: 0.8em; color: #909090; font-weight: 900;">
-            <a href="/users/{{paramsUser.id}}/tweets">@{{paramsUser.name}}</a>
+            <a href="/users/{{paramsUser.id}}/tweets">@{{paramsUser.account}}</a>
           </h6>
           <h6>{{paramsUser.introduction}}</h6>
           <div>followers and followings(未完成)</div>
@@ -110,7 +110,7 @@
               <div class="d-flex flex-row align-items-center">
                 <h6>{{this.Tweet.User.dataValues.name}}</h6>
                 <h6 class="ms-1">
-                  <a href="/users/{{this.Tweet.User.dataValues.id}}/tweets">@{{this.Tweet.User.dataValues.name}}</a>
+                  <a href="/users/{{this.Tweet.User.dataValues.id}}/tweets">@{{this.Tweet.User.dataValues.account}}</a>
                 </h6>
                 <h6 class="ms-1">時間戳記(待補)</h6>
               </div>
@@ -179,7 +179,7 @@
                   </div>
                   <div class="d-flex flex-row align-items-center">
                     <h6 class="ms-1">
-                      <a href="/users/{{this.id}}/tweets">@{{this.name}}</a>
+                      <a href="/users/{{this.id}}/tweets">@{{this.account}}</a>
                     </h6>
                   </div>
                 </div>
