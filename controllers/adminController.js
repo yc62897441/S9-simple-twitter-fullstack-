@@ -7,20 +7,30 @@ const { Op } = require('sequelize')
 
 const adminController = {
   getTweets: (req, res) => {
-    const userId = req.user.id
-    Tweet.findAll({ include: [User, { model: Reply, include: [User] }, { model: Like, include: [User] }] })
+    Tweet.findAll({ include: [User] })
       .then(tweets => {
         const data = tweets.map(d => ({
           ...d.dataValues,
-          isUserliked: d.Likes.map(d => d.User.dataValues.id).includes(userId),
-          replyNum: d.Replies.length,
-          likeUserNum: d.Likes.length
         }))
         // 如果沒用上面的寫法，直接把tweets傳出去，同一個tweet的replies會被拆分開來，變成多個tweet個夾帶一個reply
         // 例如原本應該是 tweet1 :{replies: [reply1, reply2]}，會變成 tweet1: {reply1}、tweet2: {reply2}
         return res.render('admin/index', { tweets: data })
       })
   },
+
+  getUsers: (req, res) => {
+    User.findAll({ include: [Reply, Like, { model: User, as: 'Followers' }, { model: User, as: 'Followings' } ]})
+    .then(users => {
+      const data = users.map(d => ({
+        ...d.dataValues, 
+        replyNum: d.Replies.length,
+        likeUserNum: d.Likes.length,
+        followerNum: d.Followers.length,
+        followingNum: d.Followings.length
+      }))
+      return res.render('admin/users', { users: data })
+    })
+  }
 }
 
 module.exports = adminController
