@@ -53,7 +53,7 @@ module.exports = (app, passport) => {
   // 一般用戶使用者資訊介面 A3-developer in charge
   app.get('/users/:id/tweets', authenticated, isUser, userController.getTweets)
   app.get('/users/:id/replies', authenticated, isUser, userController.getReplies)
-  app.get('/users/:id/followings', authenticated, isUser, (req, res) => { })
+  app.get('/users/:id/followings', authenticated, isUser, userController.getFollowings)
   app.get('/users/:id/followers', authenticated, isUser, userController.getFollowers)
   app.get('/users/:id/likes', authenticated, isUser, userController.getLikes)
 

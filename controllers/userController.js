@@ -144,26 +144,64 @@ const userController = {
   getFollowers: (req, res) => {
     const userId = req.user.id
     const paramsId = req.params.id
-    User.findByPk(paramsId, { include: [Tweet, { model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
-      .then(paramsUser => {
-        paramsUser = {
-          ...paramsUser.dataValues,
-          FollowingsId: paramsUser.Followings.map(d => d.dataValues.id),
-          Followers: paramsUser.Followers,
-          tweetNum: paramsUser.Tweets.length
-        }
-        paramsUser.Followers.forEach(d => {
-          d.isFollowedByUser = paramsUser.FollowingsId.includes(d.dataValues.id)
-        })
-        console.log('paramsUser', paramsUser)
 
-        User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
-          .then(users => {
-            const popularUsers = users.map(d => ({
-              ...d.dataValues,
-              isFollowedByUser: d.Followers.map(d => d.dataValues.id).includes(userId)
-            }))
-            return res.render('userFollowers', { paramsUser: paramsUser, popularUsers: popularUsers })
+    User.findByPk(userId, { include: [{ model: User, as: 'Followings' }] })
+      .then(user => {
+        const userFollowingsId = user.dataValues.Followings.map(d => d.dataValues.id)
+
+        User.findByPk(paramsId, { include: [Tweet, { model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
+          .then(paramsUser => {
+            paramsUser = {
+              ...paramsUser.dataValues,
+              FollowingsId: paramsUser.Followings.map(d => d.dataValues.id),
+              Followers: paramsUser.Followers,
+              tweetNum: paramsUser.Tweets.length
+            }
+            paramsUser.Followers.forEach(d => {
+              d.isFollowedByUser = userFollowingsId.includes(d.dataValues.id)
+            })
+            console.log('paramsUser.Followers[0]', paramsUser.Followers[0])
+
+            User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
+              .then(users => {
+                const popularUsers = users.map(d => ({
+                  ...d.dataValues,
+                  isFollowedByUser: userFollowingsId.includes(d.dataValues.id)
+                }))
+                return res.render('userFollowers', { paramsUser: paramsUser, popularUsers: popularUsers })
+              })
+          })
+      })
+  },
+
+  getFollowings: (req, res) => {
+    const userId = req.user.id
+    const paramsId = req.params.id
+
+    User.findByPk(userId, { include: [{ model: User, as: 'Followings' }] })
+      .then(user => {
+        const userFollowingsId = user.dataValues.Followings.map(d => d.dataValues.id)
+
+        User.findByPk(paramsId, { include: [Tweet, { model: User, as: 'Followings' }, { model: User, as: 'Followers' }] })
+          .then(paramsUser => {
+            paramsUser = {
+              ...paramsUser.dataValues,
+              FollowingsId: paramsUser.Followings.map(d => d.dataValues.id),
+              Followings: paramsUser.Followings,
+              tweetNum: paramsUser.Tweets.length
+            }
+            paramsUser.Followings.forEach(d => {
+              d.isFollowedByUser = userFollowingsId.includes(d.dataValues.id)
+            })
+
+            User.findAll({ where: { id: { [Op.not]: userId } }, limit: 10, include: [{ model: User, as: 'Followers' }] })
+              .then(users => {
+                const popularUsers = users.map(d => ({
+                  ...d.dataValues,
+                  isFollowedByUser: userFollowingsId.includes(d.dataValues.id)
+                }))
+                return res.render('userFollowings', { paramsUser: paramsUser, popularUsers: popularUsers })
+              })
           })
       })
   },
