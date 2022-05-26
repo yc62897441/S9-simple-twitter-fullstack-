@@ -58,7 +58,9 @@
         </div>
 
         <div class="d-flex flex-row align-items-center">
-          <button class="btn btn-success me-2" type="submit">回覆(未完成)</button>
+          <!-- Button trigger modal 回覆 -->
+          <button class="btn btn-success me-2" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">回覆
+          </button>
           {{#if tweet.isUserliked}}
           <form action="/tweets/{{this.id}}/unlike" method="post">
             <button class="btn btn-success" type="submit">Unlike</button>
@@ -69,43 +71,106 @@
           </form>
           {{/if}}
         </div>
-      </div>
-    </div>
 
-    {{!-- 推文 之 回覆s --}}
-    {{#if tweet.Replies}}
-    <section>
-      {{#each tweet.Replies}}
-      <div class="card" style="width: 100">
-        <div class="card-body">
-          <div class="d-flex flex-row align-items-start">
-            <div
-              style="width: 50px; height: 50px; border-radius:100%; background-image: url('{{this.User.dataValues.avatar}}'); background-size: cover">
-            </div>
-            {{!-- 回覆 之 個人資訊 --}}
-            <div class="ms-2">
-              <div class="d-flex flex-row align-items-center">
-                <h6>{{this.User.dataValues.name}}</h6>
-                <h6 class="ms-1">
-                  <a href="/users/{{this.User.dataValues.id}}/tweets">@{{this.User.dataValues.account}}</a>
-                </h6>
-                <h6 class="ms-1">時間戳記(待補)</h6>
+        <!-- Modal 回覆 -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+
+              <div class="modal-header d-flex flex-row justify-content-between">
+                <div class="d-flex flex-row align-items-center">
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
               </div>
-              <div>
-                <p class="card-text">回覆 <a
-                    href="/users/{{../tweet.User.dataValues.id}}/tweets">@{{../tweet.User.dataValues.account}}</a> </p>
-              </div>
-              {{!-- 回覆 之 內文 --}}
-              <div class="mt-2">
-                <p class="card-text">{{this.dataValues.comment}} </p>
+
+              {{!-- --}}
+              <div class="card" style="width: 100">
+                <div class="card-body">
+                  {{!-- 推文--}}
+                  <div class="d-flex flex-row align-items-start">
+                    <div
+                      style="width: 50px; height: 50px; border-radius:100%; background-image: url('{{tweet.User.dataValues.avatar}}'); background-size: cover">
+                    </div>
+                    <div class="ms-3 d-flex flex-column">
+                      <div class="d-flex flex-row align-items-center">
+                        <h6 style="font-weight: 900;">{{tweet.User.dataValues.name}}</h6>
+                        <h6 class="ms-1">
+                          <a href="/users/{{tweet.User.dataValues.id}}/tweets">@{{tweet.User.dataValues.account}}</a>
+                        </h6>
+                        <h6 class="ms-1">時間戳記(待補)</h6>
+                      </div>
+                      {{!-- 推文 之 內文 --}}
+                      <div class="mt-2">
+                        <p class="card-text">{{tweet.description}} </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {{!-- 回覆 --}}
+                  <div class="mt-4 d-flex flex-row align-items-start">
+                    <div
+                      style="width: 50px; height: 50px; border-radius:100%; background-image: url('{{tweet.User.dataValues.avatar}}'); background-size: cover">
+                    </div>
+                    <div class="ms-3 d-flex flex-column" style="width: 80%">
+                      {{!-- 推文 之 內文 --}}
+                      <div class="ms-2" style="height: 100%; width:100%">
+                        {{!-- 新推文form --}}
+                        <form action="/tweets/{{tweet.id}}/replies" method="post">
+                          {{!-- <div class="container" contenteditable="true"></div> --}}
+                          <div>
+                            <input type="text" class="form-control" id="comment" name="comment" placeholder="推你的回覆"
+                              required>
+                          </div>
+                          <div class="mt-1 d-flex flex-row justify-content-end ">
+                            <button class="btn btn-primary" type="submit">回覆</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        {{!-- 推文 之 回覆s --}}
+        {{#if tweet.Replies}}
+        <section>
+          {{#each tweet.Replies}}
+          <div class="card" style="width: 100">
+            <div class="card-body">
+              <div class="d-flex flex-row align-items-start">
+                <div
+                  style="width: 50px; height: 50px; border-radius:100%; background-image: url('{{this.User.dataValues.avatar}}'); background-size: cover">
+                </div>
+                {{!-- 回覆 之 個人資訊 --}}
+                <div class="ms-2">
+                  <div class="d-flex flex-row align-items-center">
+                    <h6>{{this.User.dataValues.name}}</h6>
+                    <h6 class="ms-1">
+                      <a href="/users/{{this.User.dataValues.id}}/tweets">@{{this.User.dataValues.account}}</a>
+                    </h6>
+                    <h6 class="ms-1">時間戳記(待補)</h6>
+                  </div>
+                  <div>
+                    <p class="card-text">回覆 <a
+                        href="/users/{{../tweet.User.dataValues.id}}/tweets">@{{../tweet.User.dataValues.account}}</a>
+                    </p>
+                  </div>
+                  {{!-- 回覆 之 內文 --}}
+                  <div class="mt-2">
+                    <p class="card-text">{{this.dataValues.comment}} </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {{/each}}
+        </section>
+        {{/if}}
       </div>
-      {{/each}}
-    </section>
-    {{/if}}
+    </div>
   </div>
 
   {{!-- 畫面右側 --}}
