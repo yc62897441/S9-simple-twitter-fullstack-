@@ -8,6 +8,7 @@ const { Op } = require('sequelize')
 const tweetController = {
   getTweets: (req, res) => {
     const userId = req.user.id
+    // 畫面中間 Tweets 的資料
     Tweet.findAll({ include: [User, { model: Reply, include: [User] }, { model: Like, include: [User] }] })
       .then(tweets => {
         const data = tweets.map(d => ({
@@ -19,6 +20,7 @@ const tweetController = {
         // 如果沒用上面的寫法，直接把tweets傳出去，同一個tweet的replies會被拆分開來，變成多個tweet個夾帶一個reply
         // 例如原本應該是 tweet1 :{replies: [reply1, reply2]}，會變成 tweet1: {reply1}、tweet2: {reply2}
 
+        // 畫面右側 Popular 的資料 
         User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
           .then(users => {
             const popularUsers = users.map(d => ({
@@ -33,6 +35,7 @@ const tweetController = {
   getTweet: (req, res) => {
     const userId = req.user.id
     const tweetId = req.params.id
+    // 畫面中間 Tweet 的資料
     Tweet.findOne({
       where: { id: tweetId },
       include: [User, { model: Reply, include: [User] }, { model: Like, include: [User] }]
@@ -45,6 +48,7 @@ const tweetController = {
           likeUserNum: tweet.Likes.length
         }
 
+        // 畫面右側 Popular 的資料 
         User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
           .then(users => {
             const popularUsers = users.map(d => ({

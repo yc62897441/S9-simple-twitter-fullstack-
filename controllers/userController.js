@@ -3,7 +3,6 @@ const User = db.User
 const Tweet = db.Tweet
 const Reply = db.Reply
 const Like = db.Like
-const Followship = db.Followship
 const { Op } = require('sequelize')
 
 const bcrypt = require('bcryptjs')
@@ -17,6 +16,7 @@ const userController = {
     const { name, email, password, passwordConfirm } = req.body
     const messages = []
 
+    // 確認密碼是否一致
     if (password !== passwordConfirm) {
       messages.push('密碼輸入不一致')
       return res.render('signup', { name, email, password, passwordConfirm, messages })
@@ -26,6 +26,7 @@ const userController = {
       // return res.redirect('/signup', { name, email, password, passwordConfirm })
     }
 
+    // 確認 email 尚未註冊過
     User.findOne({ where: { email: email } })
       .then(user => {
         if (user) {
@@ -35,9 +36,11 @@ const userController = {
           // return res.render('signup', { name, email, password, passwordConfirm })
         }
 
+        // 建立 User
         User.create({
           email: email,
           name: name,
+          account: email.split('@')[0],
           password: bcrypt.hashSync(password, bcrypt.genSaltSync(10).null),
           role: 'user'
         })
@@ -183,7 +186,7 @@ const userController = {
             paramsUser.Followers.forEach(d => {
               d.isFollowedByUser = userFollowingsId.includes(d.dataValues.id)
             })
-            
+
             // 畫面右側 Popular 的資料
             User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
               .then(users => {

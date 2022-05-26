@@ -20,6 +20,7 @@ const settingController = {
 
     User.findByPk(userId)
       .then(user => {
+        // 有要更新密碼的狀況
         if (password) {
           user.update({
             account: account,
@@ -27,20 +28,21 @@ const settingController = {
             email: email,
             password: bcrypt.hashSync(password, bcrypt.genSaltSync(10).null)
           })
-          .then(() => {
-            messages.push('更新成功')
-            return res.render('setting', { account, name, email, messages })
-          })
+            .then(() => {
+              messages.push('更新成功')
+              return res.render('setting', { account, name, email, messages })
+            })
         } else {
+          // 沒有要更新密碼的狀況
           user.update({
             account: account,
             name: name,
             email: email
           })
-          .then(() => {
-            messages.push('更新成功')
-            return res.render('setting', { account, name, email, messages })
-          })
+            .then(() => {
+              messages.push('更新成功')
+              return res.render('setting', { account, name, email, messages })
+            })
         }
       })
   }
