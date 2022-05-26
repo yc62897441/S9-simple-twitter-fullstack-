@@ -19,12 +19,27 @@ const adminController = {
 
   deleteTweet: (req, res) => {
     const tweetId = req.params.id
-    Tweet.findByPk(tweetId)
-      .then(tweet => {
-        tweet.destroy()
-        .then(() => {
-          return res.redirect('back')
+    // 刪除該則 Tweet 相關的 Replies
+    Reply.destroy({
+      where: { TweetId: tweetId },
+      // truncate: true
+    })
+      .then(() => {
+        // 刪除該則 Tweet 相關的 Likes
+        Like.destroy({
+          where: { TweetId: tweetId },
+          // truncate: true
         })
+          .then(() => {
+            // 刪除該則 Tweet
+            Tweet.findByPk(tweetId)
+              .then(tweet => {
+                tweet.destroy()
+                  .then(() => {
+                    return res.redirect('back')
+                  })
+              })
+          })
       })
   },
 
