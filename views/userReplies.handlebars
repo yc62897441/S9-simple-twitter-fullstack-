@@ -38,6 +38,17 @@
             data-bs-toggle="modal" data-bs-target="#exampleModal">
             編輯個人資料
           </button>
+          {{else}}
+          {{#if paramsUser.isFollowedByUser}}
+          <form action="/followships/{{paramsUser.id}}?_method=DELETE" method="post">
+            <button type="submit" class="mt-1 btn btn-primary" style="height: 40px; border-radius:2em">正在追蹤</button>
+          </form>
+          {{else}}
+          <form action="/followships/{{paramsUser.id}}" method="post">
+            <button type="submit" class="mt-1 btn btn-outline-primary"
+              style="height: 40px; border-radius:2em">追蹤</button>
+          </form>
+          {{/if}}
           {{/ifCond}}
         </div>
         {{!-- 個人 info --}}
@@ -117,7 +128,8 @@
               <div>
                 {{!-- 回覆 之 對象 --}}
                 <div>
-                  <p class="card-text">回覆 <a href="/users/{{this.TweetUser.id}}/tweets">@{{this.TweetUser.account}}</a></p>
+                  <p class="card-text">回覆 <a href="/users/{{this.TweetUser.id}}/tweets">@{{this.TweetUser.account}}</a>
+                  </p>
                 </div>
                 {{!-- 回覆 之內容 --}}
                 <div>

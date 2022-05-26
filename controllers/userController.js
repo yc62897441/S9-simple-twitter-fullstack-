@@ -44,7 +44,6 @@ const userController = {
           .then(user => {
             messages.push('註冊成功')
             return res.render('signin', { messages })
-
             // req.flash('success_messages', '註冊成功')
             // return res.redirect('/signin')
           })
@@ -90,25 +89,36 @@ const userController = {
   getTweets: (req, res) => {
     const userId = req.user.id
     const paramsId = req.params.id
-    Tweet.findAll({ where: { UserId: paramsId }, include: [User, Reply, { model: Like, include: User }] })
-      .then(tweets => {
-        const data = tweets.map(d => ({
-          ...d.dataValues,
-          isUserliked: d.Likes.map(d => d.User.dataValues.id).includes(userId),
-          replyNum: d.Replies.length,
-          likeUserNum: d.Likes.length
-        }))
-        User.findByPk(paramsId)
-          .then(paramsUser => {
-            paramsUser = paramsUser.dataValues
 
-            User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
-              .then(users => {
-                const popularUsers = users.map(d => ({
-                  ...d.dataValues,
-                  isFollowedByUser: d.Followers.map(d => d.dataValues.id).includes(userId)
-                }))
-                return res.render('userTweets', { tweets: data, paramsId: paramsId, paramsUser: paramsUser, popularUsers: popularUsers })
+    // User的 追蹤對象的 Id 的資料
+    User.findByPk(userId, { include: [{ model: User, as: 'Followings' }] })
+      .then(user => {
+        const userFollowingsId = user.dataValues.Followings.map(d => d.dataValues.id)
+
+        // 畫面中間 Tweets 的資料
+        Tweet.findAll({ where: { UserId: paramsId }, include: [User, Reply, { model: Like, include: User }] })
+          .then(tweets => {
+            const data = tweets.map(d => ({
+              ...d.dataValues,
+              isUserliked: d.Likes.map(d => d.User.dataValues.id).includes(userId),
+              replyNum: d.Replies.length,
+              likeUserNum: d.Likes.length
+            }))
+            // 畫面中間上方 查看的paramsUser 的資料
+            User.findByPk(paramsId)
+              .then(paramsUser => {
+                paramsUser = paramsUser.dataValues
+                paramsUser.isFollowedByUser = userFollowingsId.includes(paramsUser.id)
+
+                // 畫面右側 Popular 的資料 
+                User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
+                  .then(users => {
+                    const popularUsers = users.map(d => ({
+                      ...d.dataValues,
+                      isFollowedByUser: d.Followers.map(d => d.dataValues.id).includes(userId)
+                    }))
+                    return res.render('userTweets', { tweets: data, paramsId: paramsId, paramsUser: paramsUser, popularUsers: popularUsers })
+                  })
               })
           })
       })
@@ -117,25 +127,36 @@ const userController = {
   getReplies: (req, res) => {
     const userId = req.user.id
     const paramsId = req.params.id
-    Reply.findAll({ where: { UserId: paramsId }, include: [User, { model: Tweet, include: User }] })
-      .then(replies => {
-        const data = replies.map(d => ({
-          ...d.dataValues,
-          User: d.User.dataValues,
-          Tweet: d.Tweet.dataValues,
-          TweetUser: d.Tweet.User.dataValues
-        }))
-        User.findByPk(paramsId)
-          .then(paramsUser => {
-            paramsUser = paramsUser.dataValues
 
-            User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
-              .then(users => {
-                const popularUsers = users.map(d => ({
-                  ...d.dataValues,
-                  isFollowedByUser: d.Followers.map(d => d.dataValues.id).includes(userId)
-                }))
-                return res.render('userReplies', { replies: data, paramsId: paramsId, paramsUser: paramsUser, popularUsers: popularUsers })
+    // User的 追蹤對象的 Id 的資料
+    User.findByPk(userId, { include: [{ model: User, as: 'Followings' }] })
+      .then(user => {
+        const userFollowingsId = user.dataValues.Followings.map(d => d.dataValues.id)
+
+        // 畫面中間 Replies 的資料
+        Reply.findAll({ where: { UserId: paramsId }, include: [User, { model: Tweet, include: User }] })
+          .then(replies => {
+            const data = replies.map(d => ({
+              ...d.dataValues,
+              User: d.User.dataValues,
+              Tweet: d.Tweet.dataValues,
+              TweetUser: d.Tweet.User.dataValues
+            }))
+            // 畫面中間上方 查看的paramsUser 的資料
+            User.findByPk(paramsId)
+              .then(paramsUser => {
+                paramsUser = paramsUser.dataValues
+                paramsUser.isFollowedByUser = userFollowingsId.includes(paramsUser.id)
+
+                // 畫面右側 Popular 的資料 
+                User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
+                  .then(users => {
+                    const popularUsers = users.map(d => ({
+                      ...d.dataValues,
+                      isFollowedByUser: d.Followers.map(d => d.dataValues.id).includes(userId)
+                    }))
+                    return res.render('userReplies', { replies: data, paramsId: paramsId, paramsUser: paramsUser, popularUsers: popularUsers })
+                  })
               })
           })
       })
@@ -145,10 +166,12 @@ const userController = {
     const userId = req.user.id
     const paramsId = req.params.id
 
+    // User的 追蹤對象的 Id 的資料
     User.findByPk(userId, { include: [{ model: User, as: 'Followings' }] })
       .then(user => {
         const userFollowingsId = user.dataValues.Followings.map(d => d.dataValues.id)
 
+        // 畫面中間 Lollowers 的資料
         User.findByPk(paramsId, { include: [Tweet, { model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
           .then(paramsUser => {
             paramsUser = {
@@ -160,8 +183,8 @@ const userController = {
             paramsUser.Followers.forEach(d => {
               d.isFollowedByUser = userFollowingsId.includes(d.dataValues.id)
             })
-            console.log('paramsUser.Followers[0]', paramsUser.Followers[0])
-
+            
+            // 畫面右側 Popular 的資料
             User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
               .then(users => {
                 const popularUsers = users.map(d => ({
@@ -178,10 +201,12 @@ const userController = {
     const userId = req.user.id
     const paramsId = req.params.id
 
+    // User的 追蹤對象的 Id 的資料
     User.findByPk(userId, { include: [{ model: User, as: 'Followings' }] })
       .then(user => {
         const userFollowingsId = user.dataValues.Followings.map(d => d.dataValues.id)
 
+        // 畫面中間 Lollowings 的資料
         User.findByPk(paramsId, { include: [Tweet, { model: User, as: 'Followings' }, { model: User, as: 'Followers' }] })
           .then(paramsUser => {
             paramsUser = {
@@ -194,6 +219,7 @@ const userController = {
               d.isFollowedByUser = userFollowingsId.includes(d.dataValues.id)
             })
 
+            // 畫面右側 Popular 的資料
             User.findAll({ where: { id: { [Op.not]: userId } }, limit: 10, include: [{ model: User, as: 'Followers' }] })
               .then(users => {
                 const popularUsers = users.map(d => ({
@@ -209,26 +235,35 @@ const userController = {
   getLikes: (req, res) => {
     const userId = req.user.id
     const paramsId = req.params.id
-    Like.findAll({ where: { UserId: paramsId }, include: [User, { model: Tweet, include: [User, Reply, Like] }] })
-      .then(likes => {
-        const data = likes.map(d => ({
-          ...d.dataValues,
-          isUserliked: d.UserId.toString().includes(userId.toString()),
-          replyNum: d.Tweet.Replies.length,
-          likeUserNum: d.Tweet.Likes.length
-        }))
-        console.log('data[0].', data[0])
-        User.findByPk(paramsId)
-          .then(paramsUser => {
-            paramsUser = paramsUser.dataValues
+    // User的 追蹤對象的 Id 的資料
+    User.findByPk(userId, { include: [{ model: User, as: 'Followings' }] })
+      .then(user => {
+        const userFollowingsId = user.dataValues.Followings.map(d => d.dataValues.id)
 
-            User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
-              .then(users => {
-                const popularUsers = users.map(d => ({
-                  ...d.dataValues,
-                  isFollowedByUser: d.Followers.map(d => d.dataValues.id).includes(userId)
-                }))
-                return res.render('userLikes', { likes: data, paramsId: paramsId, paramsUser: paramsUser, popularUsers: popularUsers })
+        // 畫面中間 Likes 的資料
+        Like.findAll({ where: { UserId: paramsId }, include: [User, { model: Tweet, include: [User, Reply, Like] }] })
+          .then(likes => {
+            const data = likes.map(d => ({
+              ...d.dataValues,
+              isUserliked: d.UserId.toString().includes(userId.toString()),
+              replyNum: d.Tweet.Replies.length,
+              likeUserNum: d.Tweet.Likes.length
+            }))
+            // 畫面中間上方 查看的paramsUser 的資料
+            User.findByPk(paramsId)
+              .then(paramsUser => {
+                paramsUser = paramsUser.dataValues
+                paramsUser.isFollowedByUser = userFollowingsId.includes(paramsUser.id)
+
+                // 畫面右側 Popular 的資料 
+                User.findAll({ where: { id: { [Op.not]: req.user.id } }, limit: 10, include: [{ model: User, as: 'Followers' }, { model: User, as: 'Followings' }] })
+                  .then(users => {
+                    const popularUsers = users.map(d => ({
+                      ...d.dataValues,
+                      isFollowedByUser: d.Followers.map(d => d.dataValues.id).includes(userId)
+                    }))
+                    return res.render('userLikes', { likes: data, paramsId: paramsId, paramsUser: paramsUser, popularUsers: popularUsers })
+                  })
               })
           })
       })
